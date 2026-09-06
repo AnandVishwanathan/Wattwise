@@ -1,0 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Old Dashboard Tokens */
+    --color-surface: #F8FAFC;
+    --color-card: #FFFFFF;
+    --color-border: #E2E8F0;
+    --color-text-primary: #0F172A;
+    --color-text-muted: #64748B;
+    
+    /* WattWise Phase 3 Tokens */
+    --bg:          #07090F;
+    --bg-card:     #0C1018;
+    --bg-raised:   #111827;
+    --bg-hover:    #161F30;
+    --accent:      #00D68F;
+    --accent-muted: rgba(0, 214, 143, 0.12);
+    --accent-border: rgba(0, 214, 143, 0.22);
+    --text-1:      #EEF2FF;
+    --text-2:      #7C8FAC;
+    --text-3:      #3D4F6B;
+    --amber:       #F5A623;
+    --red:         #F05252;
+    --border:      rgba(255,255,255,0.055);
+    --border-2:    rgba(255,255,255,0.10);
+    
+    --font-display: 'Outfit', sans-serif;
+    --font-body:    'Inter', sans-serif;
+    --font-mono:    'JetBrains Mono', monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-surface: #0A0F1A;
+      --color-card: #111827;
+      --color-border: #1E293B;
+      --color-text-primary: #F1F5F9;
+      --color-text-muted: #94A3B8;
+    }
+  }
+
+  body {
+    @apply font-sans antialiased overflow-x-hidden;
+    background-color: var(--bg);
+    color: var(--text-2);
+    font-variant-numeric: tabular-nums;
+    background-image:
+      linear-gradient(rgba(0,214,143,0.022) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,214,143,0.022) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading text-text-primary;
+  }
+}
+
+@layer utilities {
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+  
+  .touch-target {
+    @apply min-w-[44px] min-h-[44px] flex items-center justify-center;
+  }
+}
