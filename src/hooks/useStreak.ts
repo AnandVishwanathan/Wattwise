@@ -91,7 +91,7 @@ export function useStreak(userId: string | undefined) {
           // Get other data
           const userDoc = await getDoc(doc(db, 'users', userId));
           const targetKwh = userDoc.exists() && userDoc.data().profile?.monthlyTarget ? userDoc.data().profile.monthlyTarget : 0;
-          let storedLongestStreak = userDoc.exists() && userDoc.data().profile?.longestStreak ? userDoc.data().profile.longestStreak : 0;
+          const storedLongestStreak = userDoc.exists() && userDoc.data().profile?.longestStreak ? userDoc.data().profile.longestStreak : 0;
 
           const appliancesSnap = await getDocs(query(collection(db, 'appliances'), where('userId', '==', userId)));
           const applianceCount = appliancesSnap.size;

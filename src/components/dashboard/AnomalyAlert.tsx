@@ -29,7 +29,9 @@ export function AnomalyAlert({ logs }: AnomalyAlertProps) {
         try {
           const dismissedDates = JSON.parse(dismissed);
           if (dismissedDates.includes(mostRecent.date)) return;
-        } catch {}
+        } catch {
+          // Ignore JSON parse errors for local storage
+        }
       }
       setAnomaly(mostRecent);
     }
@@ -40,7 +42,11 @@ export function AnomalyAlert({ logs }: AnomalyAlertProps) {
     const dismissed = localStorage.getItem("dismissed_anomalies");
     let dates: string[] = [];
     if (dismissed) {
-      try { dates = JSON.parse(dismissed); } catch {}
+      try { 
+        dates = JSON.parse(dismissed); 
+      } catch {
+        // Fallback to empty array
+      }
     }
     dates.push(anomaly.date);
     localStorage.setItem("dismissed_anomalies", JSON.stringify(dates));

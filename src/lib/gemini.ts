@@ -1,5 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import type { Appliance, EnergyTip } from "../types";
+import type { AnomalyResult } from "./ml/anomaly";
 
 let genAI: GoogleGenerativeAI | null = null;
 let model: any = null;
@@ -43,7 +44,7 @@ export async function getEnergyTips(
   if (!bypassCache && cached && Date.now() - cached.timestamp < 1800000) {
     try {
       return JSON.parse(cached.response);
-    } catch (e) {
+    } catch {
       // Ignore cache parse error
     }
   }
@@ -91,8 +92,8 @@ category must be one of: timing | temperature | duration | replacement | habit
     const text = raw.response.text().trim();
     
     // Strip markdown formatting if any
-    const jsonStr = text.startsWith('\`\`\`') 
-      ? text.replace(/\`\`\`json\n?|\`\`\`\n?/g, "") 
+    const jsonStr = text.startsWith('```') 
+      ? text.replace(/```json\n?|```\n?/g, "") 
       : text;
       
     const parsed = JSON.parse(jsonStr);
@@ -108,8 +109,6 @@ category must be one of: timing | temperature | duration | replacement | habit
     return fallback;
   }
 }
-
-import type { AnomalyResult } from "./ml/anomaly";
 
 export async function explainAnomaly(anomaly: AnomalyResult): Promise<string> {
   const fallback = JSON.stringify({
@@ -139,8 +138,8 @@ Return ONLY JSON:
     const text = raw.response.text().trim();
     
     // Strip markdown formatting if any
-    const jsonStr = text.startsWith('\`\`\`') 
-      ? text.replace(/\`\`\`json\n?|\`\`\`\n?/g, "") 
+    const jsonStr = text.startsWith('```') 
+      ? text.replace(/```json\n?|```\n?/g, "") 
       : text;
       
     // Validate JSON structure

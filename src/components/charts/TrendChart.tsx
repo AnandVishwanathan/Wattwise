@@ -7,6 +7,22 @@ interface TrendChartProps {
   logs: EnergyLog[];
 }
 
+const CustomTooltip = ({ active, payload, label }: any) => {
+  if (active && payload && payload.length) {
+    const formattedDate = format(parseISO(label), 'eeee, dd MMM');
+    return (
+      <div className="bg-surface border border-border p-md rounded-lg shadow-card">
+        <p className="font-medium text-text-primary mb-1">{formattedDate}</p>
+        <div className="flex items-center gap-2">
+          <div className="w-2 h-2 rounded-full bg-primary" />
+          <p className="text-text-primary text-small">{payload[0].value.toFixed(1)} kWh</p>
+        </div>
+      </div>
+    );
+  }
+  return null;
+};
+
 export function TrendChart({ logs }: TrendChartProps) {
   const chartData = useMemo(() => {
     // Sort logs by date and take the last 14 days
@@ -19,22 +35,6 @@ export function TrendChart({ logs }: TrendChartProps) {
       kwh: log.kwh,
     }));
   }, [logs]);
-
-  const CustomTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
-      const formattedDate = format(parseISO(label), 'eeee, dd MMM');
-      return (
-        <div className="bg-surface border border-border p-md rounded-lg shadow-card">
-          <p className="font-medium text-text-primary mb-1">{formattedDate}</p>
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-primary" />
-            <p className="text-text-primary text-small">{payload[0].value.toFixed(1)} kWh</p>
-          </div>
-        </div>
-      );
-    }
-    return null;
-  };
 
   return (
     <div className="h-[300px] w-full mt-lg">

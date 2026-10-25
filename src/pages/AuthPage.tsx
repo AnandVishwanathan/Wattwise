@@ -25,7 +25,7 @@ export default function AuthPage() {
     if (pw.length >= 8) score += 1;
     if (/\d/.test(pw)) score += 1;
     if (/[A-Z]/.test(pw)) score += 1;
-    if (/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(pw)) score += 1;
+    if (/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+/.test(pw)) score += 1;
     return Math.min(score, 4);
   };
   const strength = calculateStrength(password);

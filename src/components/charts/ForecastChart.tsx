@@ -8,6 +8,30 @@ interface ForecastChartProps {
   logs: EnergyLog[];
 }
 
+const ForecastTooltip = ({ active, payload, label }: any) => {
+  if (active && payload && payload.length) {
+    const data = payload[0].payload;
+    const formattedDate = format(parseISO(label), 'dd MMM yyyy');
+    
+    if (data.isForecast) {
+      return (
+        <div className="bg-surface border border-border p-md rounded-lg shadow-card">
+          <p className="font-medium text-text-primary mb-1">{formattedDate}</p>
+          <p className="text-primary text-small">Forecast (±15%): {data.forecast.toFixed(1)} kWh</p>
+          <p className="text-text-muted text-micro mt-1">Range: {data.lower.toFixed(1)} - {data.upper.toFixed(1)}</p>
+        </div>
+      );
+    }
+    return (
+      <div className="bg-surface border border-border p-md rounded-lg shadow-card">
+        <p className="font-medium text-text-primary mb-1">{formattedDate}</p>
+        <p className="text-text-primary text-small">Actual: {data.actual.toFixed(1)} kWh</p>
+      </div>
+    );
+  }
+  return null;
+};
+
 export function ForecastChart({ logs }: ForecastChartProps) {
   const forecast = useMemo(() => forecastNextMonth(logs), [logs]);
 
@@ -46,30 +70,6 @@ export function ForecastChart({ logs }: ForecastChartProps) {
 
   const today = sortedLogs.length > 0 ? sortedLogs[sortedLogs.length - 1].date : null;
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
-      const data = payload[0].payload;
-      const formattedDate = format(parseISO(label), 'dd MMM yyyy');
-      
-      if (data.isForecast) {
-        return (
-          <div className="bg-surface border border-border p-md rounded-lg shadow-card">
-            <p className="font-medium text-text-primary mb-1">{formattedDate}</p>
-            <p className="text-primary text-small">Forecast (±15%): {data.forecast.toFixed(1)} kWh</p>
-            <p className="text-text-muted text-micro mt-1">Range: {data.lower.toFixed(1)} - {data.upper.toFixed(1)}</p>
-          </div>
-        );
-      }
-      return (
-        <div className="bg-surface border border-border p-md rounded-lg shadow-card">
-          <p className="font-medium text-text-primary mb-1">{formattedDate}</p>
-          <p className="text-text-primary text-small">Actual: {data.actual.toFixed(1)} kWh</p>
-        </div>
-      );
-    }
-    return null;
-  };
-
   const trendMessages = {
     up: { bg: 'bg-amber-100', text: 'text-amber-800', msg: `Projected to increase ${parseFloat(forecast.percentChange.toString()).toFixed(1)}%` },
     down: { bg: 'bg-green-100', text: 'text-green-800', msg: `Projected to decrease ${Math.abs(forecast.percentChange).toFixed(1)}%` },
@@ -105,7 +105,7 @@ export function ForecastChart({ logs }: ForecastChartProps) {
               tickLine={false}
               dx={-10}
             />
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip content={<ForecastTooltip />} />
             
             {/* Area for confidence band, only where upper/lower exist */}
             <Area 

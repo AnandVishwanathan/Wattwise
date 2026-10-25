@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import type { PanInfo } from 'framer-motion';
 import { Trash2, Edit2, Copy } from 'lucide-react';
@@ -21,14 +21,16 @@ export function ApplianceCard({ appliance, onEdit, onDelete, onDuplicate }: Appl
   const intensityColor = monthlyKwh < 50 ? 'border-primary' : monthlyKwh > 150 ? 'border-danger' : 'border-warning';
   const monthlyCost = monthlyKwh * 6.5;
 
-  let longPressTimer: ReturnType<typeof setTimeout>;
+  const longPressTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleTouchStart = () => {
-    longPressTimer = setTimeout(() => setShowActions(true), 500);
+    longPressTimerRef.current = setTimeout(() => setShowActions(true), 500);
   };
 
   const handleTouchEnd = () => {
-    clearTimeout(longPressTimer);
+    if (longPressTimerRef.current) {
+      clearTimeout(longPressTimerRef.current);
+    }
   };
 
   const handleDragEnd = (_e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
